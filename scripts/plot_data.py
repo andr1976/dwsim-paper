@@ -9,27 +9,6 @@ X_n=np.loadtxt("scaled_testplan.csv",delimiter=",")
 Y_dwsim = np.loadtxt("DWSIM_results_cleaned.csv",delimiter=",")
 Y_HYSYS = np.loadtxt("HYSYS_result.csv",delimiter=",")
 
-mask = Y_dwsim[:,0]==-9999
-
-#for i in range(len(ma.masked_array(Y_dwsim[:,0],mask=mask))):
-#    diff = abs(ma.masked_array(Y_dwsim[:,0],mask=mask)[i] - ma.masked_array(Y_HYSYS[:,0], mask= mask)[i]) / ma.masked_array(Y_HYSYS[:,0], mask= mask)[i] * 100
-#    if diff > 1.0: 
-#        print(i,diff,"Oil")
-#    diff = abs(ma.masked_array(Y_dwsim[:,1],mask=mask)[i] - ma.masked_array(Y_HYSYS[:,1], mask= mask)[i]) / ma.masked_array(Y_HYSYS[:,1], mask= mask)[i] * 100
-#    if diff > 1.0: 
-#        print(i,diff,"power")
-#    diff = abs(ma.masked_array(Y_dwsim[:,2],mask=mask)[i] - ma.masked_array(Y_HYSYS[:,2], mask= mask)[i]) / ma.masked_array(Y_HYSYS[:,2], mask= mask)[i] * 100
-#    if diff > 1.0: 
-#        print(i,diff,"rvp")
-
-#plt.figure(1)
-#plt.plot(ma.masked_array(Y_HYSYS[:,0], mask= mask),ma.masked_array(Y_dwsim[:,0],mask=mask))
-#plt.figure(2)
-#plt.plot(ma.masked_array(Y_HYSYS[:,1],mask=mask),ma.masked_array(Y_dwsim[:,1],mask=mask))
-#plt.figure(3)
-#plt.plot(ma.masked_array(Y_HYSYS[:,2],mask=mask),ma.masked_array(Y_dwsim[:,2],mask=mask))
-#plt.show()
-
 dataset = pd.DataFrame({'DWSIM_liquid': Y_dwsim[:, 0], 'DWSIM_power': Y_dwsim[:, 1], 'DWSIM_rvp': Y_dwsim[:, 2], 'HYSYS_liquid': Y_HYSYS[:, 0], 'HYSYS_power': Y_HYSYS[:, 1], 'HYSYS_rvp': Y_HYSYS[:, 2]})
 dataset.insert(0, "Tsep1", X_n[:,0], True)
 dataset.insert(1, "Psep1", X_n[:,1], True)
@@ -47,8 +26,6 @@ rmse=[]
 nrmse=[]
 rsquared=[]
 rsquared_adj=[]
-
-
 
 model = smf.ols('DWSIM_liquid ~ HYSYS_liquid', data=dataset_clean )
 res=model.fit()
@@ -73,7 +50,6 @@ rmse.append(np.sqrt(res.mse_resid))
 nrmse.append(rmse[-1]/dataset_clean['HYSYS_power'].mean())
 rsquared.append(res.rsquared)
 rsquared_adj.append(res.rsquared_adj)
-
 
 ax = sn.regplot(x="HYSYS_power", y="DWSIM_power", truncate=False, data=dataset_clean, color = 'k')
 ax.set_xlabel("HYSYS main power requirement (kW)")

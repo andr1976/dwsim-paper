@@ -1,27 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
-
 import os
 import time
 import numpy as np
 import win32com.client as win32
-from platypus import Problem, Real, NSGAII
-import pyKriging
-from pyKriging.krige import kriging
-from pyKriging.samplingplan import samplingplan
 
 class HYSYSopt():
-        def __init__(self,hysys):
-            #super(HYSYSopt, self).__init__(1,1,1)
+        def __init__(self,hysys,fname):
             print("Creating the Solver Class")
-            #self.types[:]= [Real(1.8,2.6)]              #Bound
-            #self.constraints[:] = "<=0"
             self.hyapp = hysys
-            # Check if object can be called upon initialisation
             
             self.sep1t = 0 
             self.sep1p = 0 
@@ -35,12 +20,8 @@ class HYSYSopt():
             self.boostp = 0 
             self.power= 0 
             self.rvp= 0
-            #self.dewpoint=0 
-            #self.profit=0 
             self.crude_flow= 0 
-            #self.gas_flow=out_sheet = 0 
-            #self.co2=out_sheet = 0 
-            self.fname = "Z:\\Academia\\DWSIM\\Optim.hsc"
+            self.fname = fname
             self.load_simcase()
             
             
@@ -64,12 +45,8 @@ class HYSYSopt():
             
             self.power=out_sheet.Cell(1,3).CellValue
             self.rvp=(out_sheet.Cell(1,10).CellValue)/100*14.5 # kPa to psia
-            #self.dewpoint=out_sheet.Cell(1,11).CellValue
-            #self.profit=out_sheet.Cell(1,9).CellValue
             self.crude_flow=out_sheet.Cell(1,12).CellValue*3600 # kmole / h 
-            #self.gas_flow=out_sheet.Cell(1,2).CellValue*3600*24 # Sm3/s to Sm3/d
-            #self.co2=out_sheet.Cell(1,8).CellValue*3600 # kg/s to kg/h
-    
+            
         def powernotchanged(self):
             out_sheet=self.sheet.Operations.Item('Objectives')
             if self.power!=out_sheet.Cell(1,3).CellValue:
@@ -160,17 +137,6 @@ class HYSYSopt():
             self.update_responses()      
             return np.asarray([self.crude_flow, self.power, self.rvp])
 
-#        def evaluate(self, solution):
-#            print "Called evaluate"
-#
-#            x = solution.variables
-#            
-#            
-#            f,g,fail = self(x)
-#            
-#            solution.objectives = f
-#            solution.constraints = g
-
 def scaleSamplingPlan(X, limits):
     X_n = np.zeros(X.shape)
     i=0
@@ -191,11 +157,9 @@ hyapp = win32.Dispatch('HYSYS.Application.v11.0')
 
 hyapp.Visible = True
 
-hycalc=HYSYSopt(hyapp) # Maybe not needed, maybe just the the simcase?
+hycalc=HYSYSopt(hyapp,"simulations\\Optim.hsc") # Maybe not needed, maybe just the the simcase?
 
-xlimits=[(50,70),(11,32),(2.5,10),(40,75),(0.5,2),(25,40),(25,40),(25,40),(60,90),(-5,28)] 
-
-X_n=np.loadtxt("scaled_testplan.csv",delimiter=",")
+X_n=np.loadtxt("data\\scaled_testplan.csv",delimiter=",")
 Y=np.zeros((len(X_n),3))
         
 for i in range(len(X_n)):
@@ -203,28 +167,3 @@ for i in range(len(X_n)):
     Y[i,:] = hycalc(X_n[i,:])
 
 np.savetxt("HYSYS_result.csv",Y,delimiter=",")
-# sp = samplingplan(n_var)
-# X = sp.optimallhc(n_sample*n_var)
-# X_n=scaleSamplingPlan(X,xlimits)
-# #
-# Y=np.zeros((len(X_n),n_fact))
-# #
-# t1= time.time()
-
-# ## make something that creates a restart if simulation failed.
-# title=['crudeflow','power','rvp','sep1t','sep1p','sep2p','sep3t','sep3p','scu1t','scu2t','scu3t','boostp','refrig']
-
-
-# for i in range(len(X_n)):
-#     #print "Progress", float(i)/len(X_n)*100, "%, Power",  #"%, x: ", X_n[i,:]
-#     try:
-#         hycalc=HYSYSopt(hyapp)
-#         Y[i,:] = hycalc(X_n[i,:])
-#         #hycalc.simcase.close()
-#     except:
-#         Y[i,:] = np.asarray([np.NaN,np.NaN,np.NaN])
-#     print("Progress", float(i)/len(X_n)*100, "%, Power",  Y[i,1])#"%, x: ", X_n[i,:]
-#     np.savetxt("Z:/Academia/AUE/Projects/General_simulation_optimisation/results_timing.csv", np.concatenate((Y,X_n),axis=1), delimiter=',',header=','.join(title))
-
-# t2= time.time()
-# print("Sim time: ", t2-t1)
