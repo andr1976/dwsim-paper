@@ -24,7 +24,13 @@ In order to run the DWSIM simulation file, DWSIM can be downloaded from: https:/
 
 For running the HYSYS automation script an installation of Aspentech HYSYS is required. 
 
-For python, python38 has been used and the required modules/packages are listed in `requirements.txt`.
+For python, python38 has been used and the required modules/packages are listed in `requirements.txt`. Requirements for Windows can be installed by running:
+
+```
+    python -m pip install -r requirements.txt
+```
+
+For linux the pywin32 package shall be removed from the list. 
 
 ## References 
 The simulation file used as basis for the present study originates from the paper: 
