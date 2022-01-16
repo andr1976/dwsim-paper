@@ -145,7 +145,7 @@ if __name__=="__main__":
     #np.savetxt("scaled_testplan.csv",X_n,delimiter=",")
     
     # Loading already existing sampling plan
-    X_n = np.loadtxt("data\\scaled_testplan.csv",delimiter=",")
+    X_n = np.loadtxt("..\\data\\scaled_testplan.csv",delimiter=",")
     Y=np.zeros((len(X_n),4))
         
     for i in range(len(X_n)):

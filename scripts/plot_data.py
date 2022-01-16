@@ -5,9 +5,9 @@ import pandas as pd
 import seaborn as sn
 import statsmodels.formula.api as smf 
 
-X_n=np.loadtxt("scaled_testplan.csv",delimiter=",")
-Y_dwsim = np.loadtxt("DWSIM_results_cleaned.csv",delimiter=",")
-Y_HYSYS = np.loadtxt("HYSYS_result.csv",delimiter=",")
+X_n=np.loadtxt("..\\data\\scaled_testplan.csv",delimiter=",")
+Y_dwsim = np.loadtxt("..\\data\\DWSIM_results_cleaned.csv",delimiter=",")
+Y_HYSYS = np.loadtxt("..\\data\\HYSYS_result.csv",delimiter=",")
 
 dataset = pd.DataFrame({'DWSIM_liquid': Y_dwsim[:, 0], 'DWSIM_power': Y_dwsim[:, 1], 'DWSIM_rvp': Y_dwsim[:, 2], 'HYSYS_liquid': Y_HYSYS[:, 0], 'HYSYS_power': Y_HYSYS[:, 1], 'HYSYS_rvp': Y_HYSYS[:, 2]})
 dataset.insert(0, "Tsep1", X_n[:,0], True)

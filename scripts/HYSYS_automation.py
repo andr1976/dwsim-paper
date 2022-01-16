@@ -149,17 +149,14 @@ def scaleSamplingPlan(X, limits):
         
     return X_n      
 
-n_var=10    
-n_fact=3
-n_sample=20
 hyapp = win32.Dispatch('HYSYS.Application.v11.0')
 #hyapp = win32.Dispatch('UniSimDesign.Application')
 
 hyapp.Visible = True
 
-hycalc=HYSYSopt(hyapp,"simulations\\Optim.hsc") # Maybe not needed, maybe just the the simcase?
+hycalc=HYSYSopt(hyapp,"..\\simulations\\Optim_tight.hsc") # Maybe not needed, maybe just the the simcase?
 
-X_n=np.loadtxt("data\\scaled_testplan.csv",delimiter=",")
+X_n=np.loadtxt("..\\data\\scaled_testplan.csv",delimiter=",")
 Y=np.zeros((len(X_n),3))
         
 for i in range(len(X_n)):
