@@ -96,18 +96,18 @@ class DWSIM:
         self.crude_flow = -9999
 
     def update_responses(self):
-        self.rvp = self.sim.GetFlowsheetSimulationObject("MSTR-63").GetPressure() / 1e5 * 14.5
+        self.rvp = self.sim.GetFlowsheetSimulationObject("63").GetPressure() / 1e5 * 14.5
         p1 = self.sim.GetFlowsheetSimulationObject("23-KA-01").DeltaQ
         p2 = self.sim.GetFlowsheetSimulationObject("23-KA-02").DeltaQ
         p3 = self.sim.GetFlowsheetSimulationObject("23-KA-03").DeltaQ
         p4 = self.sim.GetFlowsheetSimulationObject("27-KA-01").DeltaQ
         p5 = self.sim.GetFlowsheetSimulationObject("21-PA-01").DeltaQ 
         self.power = p1 + p2 + p3 + p4 + p5
-        self.crude_flow = self.sim.GetFlowsheetSimulationObject("MSTR-21").GetMolarFlow() * 3.600  # kmole/h
+        self.crude_flow = self.sim.GetFlowsheetSimulationObject("21").GetMolarFlow() * 3.600  # kmole/h
         #self.crude_flow = self.sim.GetFlowsheetSimulationObject("MSTR-22").GetPhase("OverallLiquid").Properties.volumetric_flow * 3600 
     
     def update_factors(self):
-        self.sim.GetFlowsheetSimulationObject("MSTR-01").SetPressure(self.sep1p)
+        self.sim.GetFlowsheetSimulationObject("01").SetPressure(self.sep1p)
         self.sim.GetFlowsheetSimulationObject("20-HA-01").OutletTemperature = self.sep1t 
         self.sim.GetFlowsheetSimulationObject("VALV-01").OutletPressure = self.sep2p + 0.5e5
         self.sim.GetFlowsheetSimulationObject("VALV-02").OutletPressure = self.sep3p + 0.5e5
@@ -120,7 +120,7 @@ class DWSIM:
         self.sim.GetFlowsheetSimulationObject("23-KA-01").DeltaP = self.boostp - self.sep1p + 1.5e5
         self.sim.GetFlowsheetSimulationObject("25-HA-02").OutletTemperature = self.refrig
 
-        self.vap_ratio = self.sim.GetFlowsheetSimulationObject("MSTR-63").GetPhase("Vapor").Properties.volumetric_flow / self.sim.GetFlowsheetSimulationObject("MSTR-63").GetPhase("OverallLiquid").Properties.volumetric_flow        
+        self.vap_ratio = self.sim.GetFlowsheetSimulationObject("63").GetPhase("Vapor").Properties.volumetric_flow / self.sim.GetFlowsheetSimulationObject("63").GetPhase("OverallLiquid").Properties.volumetric_flow        
 
 def scale_sampling_plan(X, limits):
     X_n = np.zeros(X.shape)
